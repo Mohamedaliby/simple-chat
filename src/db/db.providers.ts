@@ -7,9 +7,12 @@ export const databaseProviders = [
       const dataSource = new DataSource({
         type: 'mysql',
         host: 'localhost',
+        // host: process.env.DATABASE_HOST,
         port: 3306,
-        username: 'root',
-        password: '',
+        // username: 'root',
+        // password: '',  
+        username: process.env.DB_USERNAME,
+        password:  process.env.DB_PASSWORD,
         database: 'chat',
         entities: [
             __dirname + '/../**/*.entity{.ts,.js}',
