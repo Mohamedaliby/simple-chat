@@ -1,4 +1,4 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer } from '@nestjs/websockets';
+import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer, ConnectedSocket } from '@nestjs/websockets';
 import { MessageService } from './message.service';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
@@ -10,17 +10,17 @@ export class MessageGateway {
   constructor(private readonly messageService: MessageService, private readonly uerService: OnlineUsersService) { }
   @WebSocketServer()
   server: Server;
-
   @SubscribeMessage('createMessage')
   async create(@MessageBody() createMessageDto: CreateMessageDto) {
     console.log(createMessageDto);
+    console.log('client')
 
     // await this.messageService.create(createMessageDto);
     let { author } = createMessageDto
     console.log(author);
-    // let mauthor = await this.uerService.findOne(id)
+    let mauthor = await this.uerService.findOne(author)
     let message: any = createMessageDto
-    // message.author = mauthor
+    message.author = mauthor
     let to: any = createMessageDto.to
     this.server.to(to).emit('createMessage', createMessageDto)
     console.log('message',message)
